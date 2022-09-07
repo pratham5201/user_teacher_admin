@@ -1,34 +1,30 @@
-class UsersController < ApplicationController 
+class UsersController < ApplicationController
   load_and_authorize_resource
   before_action :authenticate_user!
-  before_action :set_user, only: %i[ show update destroy ]
+  before_action :set_user, only: %i[show update destroy]
 
   # GET /users
   def index
     if current_user
-   
-        
-        @users = User.where.not(role1: 1) if user_student
-        @users = User.where(role1: 1) if user_teacher 
-        @users = User.all if user_admin
-        @users1 = User.where(role1: 0) if user_teacher 
 
-            if user_teacher
-                      render json: { student: @users1, teacher: @users }
-            else
-                  render json: {users: @users }
-            end
+      @users = User.where.not(role1: 1) if user_student
+      @users = User.where(role1: 1) if user_teacher
+      @users = User.all if user_admin
+      @users1 = User.where(role1: 0) if user_teacher
 
-        
-          
+      if user_teacher
+        render json: { student: @users1, teacher: @users }
+      else
+        render json: { users: @users }
+      end
+
     else
-      render json: { message: "Login first as admin and then access this page."}, status: :unprocessable_entity
+      render json: { message: 'Login first as admin and then access this page.' }, status: :unprocessable_entity
     end
     # @users = User.all if user_admin
     # @users = User.where(role: 3) if user_teacher
     # @users = User.where.not(role: 3) if user_student
     # render json: { users: gen_users }
-
   end
 
   # GET /users/1
@@ -39,10 +35,8 @@ class UsersController < ApplicationController
 
   # POST /users
   def create
-    
     if current_user.role1 == 2
-          @user = User.new(user_params)
-    
+      @user = User.new(user_params)
 
       @user.save
       render json: @user, status: :created, location: @user
@@ -84,13 +78,6 @@ class UsersController < ApplicationController
   #   end
   # end
 
-
-
-
-
-
-
-
   # PATCH/PUT /users/1
   def update
     if @user.update(user_params)
@@ -106,15 +93,15 @@ class UsersController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_user
-      @user = User.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def user_params
-      params.require(:user).permit( :email, :role1)
-      # params.require(:user).permit(:email, :role1)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_user
+    @user = User.find(params[:id])
+  end
 
-    end
+  # Only allow a list of trusted parameters through.
+  def user_params
+    params.require(:user).permit(:email, :role1)
+    # params.require(:user).permit(:email, :role1)
+  end
 end

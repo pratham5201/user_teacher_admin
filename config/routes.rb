@@ -9,7 +9,7 @@ root "home#home"
   # devise_for :users
   resources :notices
   # namespace :users do
-    resources :users
+  resources :users
   # end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

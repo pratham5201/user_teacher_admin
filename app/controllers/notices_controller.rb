@@ -2,7 +2,7 @@ class NoticesController < ApplicationController
   load_and_authorize_resource
 
   before_action :authenticate_user!
-  before_action :set_notice, only: %i[ show update destroy ]
+  before_action :set_notice, only: %i[show update destroy]
 
   # GET /notices
   def index
@@ -10,7 +10,7 @@ class NoticesController < ApplicationController
       @notices = Notice.all
       render json: @notices
     else
-    render json: { message: "Login first to access this page."}, status: :unprocessable_entity
+      render json: { message: 'Login first to access this page.' }, status: :unprocessable_entity
     end
   end
 
@@ -21,18 +21,16 @@ class NoticesController < ApplicationController
 
   # POST /notices
   def create
-
     if current_user
       @notice = Notice.new(notice_params)
-      @notice.user_id=current_user.id
-
-          if @notice.save
-            render json: @notice, status: :created, location: @notice
-          else
-            render json: @notice.errors, status: :unprocessable_entity
-          end
+      @notice.user_id = current_user.id
+      if @notice.save
+        render json: @notice, status: :created, location: @notice
+      else
+        render json: @notice.errors, status: :unprocessable_entity
+      end
     else
-    render json: { message: "Login first to access this page."}, status: :unprocessable_entity
+      render json: { message: 'Login first to access this page.' }, status: :unprocessable_entity
     end
 
     # @notice = Notice.new(notice_params)
@@ -56,18 +54,19 @@ class NoticesController < ApplicationController
   # DELETE /notices/1
   def destroy
     @notice.destroy
+    render json: { "meassges": 'Notice deleted successfully' }
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_notice
-      @notice = Notice.find(params[:id])
-    end
 
-    # Only allow a list of trusted parameters through.
-    def notice_params
-      # params.fetch(:notice, {})
-      params.require(:notice).permit(:title, :discription)
+  # Use callbacks to share common setup or constraints between actions.
+  def set_notice
+    @notice = Notice.find(params[:id])
+  end
 
-    end
+  # Only allow a list of trusted parameters through.
+  def notice_params
+    # params.fetch(:notice, {})
+    params.require(:notice).permit(:title, :discription)
+  end
 end
